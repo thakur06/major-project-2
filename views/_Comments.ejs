@@ -1,0 +1,24 @@
+<div class="container d-flex sticky-top " >
+    <div class="col-7 text-center float-end">
+    <small>
+        <%= comm.msg%>
+    </small><br>
+
+    <small>
+        <%= comm.user.email %>
+    </small>
+
+    <a class="" style="text-decoration: none;" href="/like/?id=<%= comm._id %>&type=Comment">💖</a>
+    <small>
+       Liked by  <%= comm.Like.length %>
+    </small>
+</div>
+<div class="col-5">
+    <% if(use._id ==comm.user._id){%>
+    <form action="/comment/delete" method="post">
+       <input type="hidden" class="col-2" value="<%= comm._id %>" name="val">
+       <input class="btn  btn-sm  border-0  shadow-none " type="submit" value="🗑️"> 
+    </form>
+    <%}%>
+</div>
+</div>

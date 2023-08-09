@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body class="text-center">
+      
+        <h3><%= user.name%>
+        </h3>
+        <img class="img-fluid rounded" src="<%= user.avatars%>" style="max-height: 200px;max-width: 200px;">
+        <% if(flag){%>
+     <%if (user._id){%><br>
+       
+        <small>Update profile</small>
+        <form method="Post"  action="/user/updatedata/<%= user._id %> " enctype="multipart/form-data">
+<input type="text" name="name" required>
+<input id="password" name="pass" type="password" pattern="^\S{2,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Must have at least 2 characters' : ''); if(this.checkValidity()) form.password_two.pattern = this.value;" placeholder="Password" required>
+
+<input id="password_two" name="password_two" type="password" pattern="^\S{2,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Password does not match ' : '');" placeholder="Verify Password" required>
+<input type="file" name="avatars">
+<input type="submit"class="btn btn-primary" value="Update" > 
+        </form>
+        <a href="/user/delete/parmanent/<%= user.id%>" class="btn btn-danger">Delete account</a>
+     <%}%>
+     <%}else{%>
+        <br>
+        <a href="/friend/request/<%= user._id %>" class="btn btn-sm btn-primary my-3" value="follow" >Follow / Unfollow </a>
+        <a href="" class="btn btn-sm border-0 shadow-none my-3" value="follow" >Followers </a>
+        <a href="" class="btn btn-sm border-0 shadow-none my-3" value="follow" >Following </a>
+        <%}%>
+        <script src="" async defer></script>
+    </body>
+</html>

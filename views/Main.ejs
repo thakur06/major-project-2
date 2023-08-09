@@ -1,0 +1,120 @@
+<div class=" row">
+    <div class="col-5">
+        <ul>
+            <!-- <%= use.following %> -->
+            <% for(posts of post){ %>
+
+                <%- include("_Posts")%>
+
+
+                    <%} %>
+        </ul>
+    </div>
+    <div class="col-3 border border-dark text-center" style="text-decoration: none;">
+        <h3>Suggestions </h3>
+        <hr>
+        <% for (u of allusers){%>
+            <%- include("_allUsers") %>
+                <%}%>
+    </div>
+
+    <div class="col border border-dark text-center" style="text-decoration: none; width: fit-content;">
+
+        <%- include("friends") %>
+
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vquery/5.0.1/v.min.js" integrity="sha512-JTaEfpc0EjojckV4ObScEHC2yHkDKUXEC5xO4Yb8upLDUR/2clSQKloqw6Ocp66a7dW689eKo0b/KC9C+T6osg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                                                                                                    <!-- WORKS ONLY IN GROUP CHAT  -->
+<script>
+
+const ting =new Audio("/uploads/Ting.mp3");
+    class chatEngine {
+        constructor(chatId, userEmail) {
+            // remember to check here for the id 
+            this.chatBox = (`#${chatId}`);
+            this.userEmail = userEmail;
+            this.socket = io.connect("http://localhost:5000", {
+                withCredentials: true,
+                extraHeaders: {
+                    "my-custom-header": "abcd"
+                }
+            });
+
+            if (this.userEmail) {
+                this.connectionHandler();
+            }
+        }
+        connectionHandler() {
+           
+
+            let self = this;
+
+this.socket.on('connect', function(){
+    console.log('connection established using sockets...!');
+
+
+    self.socket.emit('join_room', {
+        user_email: self.userEmail,
+        chatroom:  `monk `
+    });
+
+    self.socket.on('user_joined', function(data){
+        console.log('a user joined!', data);
+    })
+
+
+});
+
+// CHANGE :: send a message on clicking the send message button
+$('#send_msg').click(function(){
+    let msg = $('#msg_send');
+
+    if (msg.val().trim() != '' && msg.val().trim()!=null && msg.val().trim()!=undefined && msg.val().trim()!=""){
+        self.socket.emit('send_message', {
+            message: msg.val().trim(),
+            user_email: self.userEmail,
+            chatroom:  `monk `
+        });
+        console.log(msg.val())
+         msg.val(null);
+    }
+   
+});
+
+self.socket.on('receive_message', function(data){
+    console.log('message received', data.message);
+
+
+    let newMessage = $('<li>');
+
+    let messageType = 'other-message';
+
+    if (data.user_email == self.userEmail){
+        messageType = 'self-message';
+    }
+
+    newMessage.append($('<span>', {
+        'html': data.message
+    }));
+
+    newMessage.append($('<sub>', {
+        'html': data.user_email
+    }));
+if (data.user_email != "<%= use.email %>"){
+ting.play();
+
+}
+    newMessage.addClass(messageType);
+
+    $('#chatBox').append(newMessage);
+
+})
+    }
+    };
+     
+
+    new chatEngine("chat-section", "<%= use.email%>");
+</script>

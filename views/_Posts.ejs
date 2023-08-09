@@ -1,0 +1,48 @@
+<div class="shadow-sm p-3 mb-5 bg-body rounded ">
+    <div class="container text-center">
+        <p>
+            <%= posts.msg %>
+                <br>
+                <small>
+                    <%= posts.user.email%>
+                </small>
+            <a class="" style="text-decoration: none;" href="/like/?id=<%= posts._id %>&type=Post">💖</a>
+            <small>
+                <%= posts.Like.length %> Likes
+            </small>
+                <% if(posts.user._id==use._id) {%>
+                    <form action="/post/delete" method="post"><input type="hidden" name="val"
+                            value="<%= posts._id %>" />
+                        <input type="submit" value="🗑️"><br>
+
+                        
+                    </form>
+                    <%}%>
+
+        </p>
+    </div>
+    <div class="container text-center">
+
+        <form action="/Comment" method="POST">
+            <input type="text" name="content" placeholder="Type Here to add comment..." required>
+            <input type="hidden" name="post" value="<%= posts._id %>" required>
+            <input type="submit" value="➤">
+        </form>
+
+
+    </div>
+
+    <div  class="container text-center">
+        <div class="btn-group">
+            <button type="button" class="btn  border-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Show comments
+            </button>
+            <ul class="dropdown-menu " style="height:fit-content;">
+                <% for (comm of posts.comment){%>
+                    <div class="shadow-lg p-3 mb-1 bg-body rounded" style="height: fit-content;"><%-
+                            include("_Comments")-%></div>
+                    <%}%>
+            </ul>
+        </div>
+    </div>
+</div>
